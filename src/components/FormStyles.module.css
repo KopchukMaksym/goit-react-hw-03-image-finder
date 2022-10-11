@@ -1,0 +1,69 @@
+.section {
+  padding: 25px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  width: 300px;
+  height: 140px;
+  padding: 20px;
+  border: 2px solid #28323d;
+}
+
+.input {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.btnSubmit,
+.btnDelete {
+  width: 100px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid #28323d;
+  cursor: pointer;
+  background-color: whitesmoke;
+}
+
+.btnSubmit:hover,
+.btnDelete:hover,
+.btnSubmit:focus,
+.btnDelete:focus {
+  background-color: #c3c3c3;
+  outline: 1px solid rgb(46, 18, 230);
+}
+
+.inputFilter {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  cursor: pointer;
+  border: none;
+  border-radius: 2px;
+  outline: 4px solid #91c0fa;
+}
+
+.inputFilter:focus,
+.inputFilter:hover {
+  border-radius: 4px;
+  outline: 4px solid #063773;
+}
+
+.list {
+  margin: 0;
+  padding: 15px;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.btnDelete {
+  width: 50px;
+  margin-left: 15px;
+}
