@@ -1,54 +1,78 @@
 import { Component } from 'react';
-import ContactForm from './ContactForm';
-import ContactList from './ContactList';
-import Filter from './Filter';
-import s from './FormStyles.module.css';
+import Searchbar from './Searchbar/Searchbar';
+import { fetchApi } from 'utils/fetchApi';
+import ImageGallery from './ImageGallery/ImageGallery';
+import s from '../components/App.module.css';
+import Button from './Button/Button';
+import Loader from './Loader/Loader';
+import Modal from './Modal/Modal';
 
 class App extends Component {
   state = {
-    contacts: [],
-    filter: '',
+    data: [],
+    page: 1,
+    query: '',
+    isLoading: false,
+    modalOpen: false,
+    modalContent: '',
   };
 
-  handleSubmit = contact => {
-    const isExist = this.state.contacts.filter(el => contact.name === el.name);
-    if (!!isExist.length) {
-      alert(`${contact.name} is already in contacts`);
-    } else {
-      this.setState(prevState => {
-        return { contacts: [...prevState.contacts, contact] };
-      });
+  componentDidUpdate(_, prevState) {
+    const { query, page } = this.state;
+    if ((query && prevState.query !== query) || page > prevState.page) {
+      this.getImagesFromApi();
+    }
+  }
+
+  getImagesFromApi = async () => {
+    this.setState({ isLoading: true });
+
+    try {
+      const { data } = await fetchApi(this.state.query, this.state.page);
+      this.setState({ data: [...this.state.data, ...data.hits] });
+    } catch (error) {
+      this.setState({ error });
+    } finally {
+      this.setState({ isLoading: false });
     }
   };
 
-  handleFilter = e => {
-    const { name } = e.target;
-    this.setState({
-      [name]: e.target.value.toLowerCase(),
-    });
+  searchImg = query => {
+    if (query !== this.state.query) {
+      this.setState({ query: query, page: 1, data: [] });
+    }
   };
 
-  handleDelete = id => {
-    const newContacts = this.state.contacts.filter(el => el.id !== id);
-    this.setState({ contacts: newContacts });
+  loadMore = () => {
+    this.setState({ page: this.state.page + 1 });
+  };
+
+  openModal = originUrl => {
+    this.setState({ modalOpen: true, modalContent: originUrl });
+  };
+
+  closeModal = () => {
+    this.setState({ modalOpen: false, modalContent: '' });
   };
 
   render() {
-    const { contacts, filter } = this.state;
-
-    const filterItems = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter)
-    );
+    const { modalOpen, modalContent, data, isLoading } = this.state;
     return (
-      <div className={s.section}>
-        <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.handleSubmit} />
-
-        <h2>Contacts</h2>
-        <Filter filter={filter} onFilter={this.handleFilter} />
-        {!!contacts.length && (
-          <ContactList contacts={filterItems} onDelete={this.handleDelete} />
+      <div className={s.app}>
+        <Searchbar onSubmit={this.searchImg} />
+        {modalOpen && (
+          <Modal originUrl={modalContent} closeModal={this.closeModal} />
         )}
+        {!!data.length && (
+          <ImageGallery
+            data={data}
+            openModal={this.openModal}
+            // closeModal={this.closeModal}
+          />
+        )}
+
+        {isLoading && <Loader />}
+        {!!data.length && <Button onClick={this.loadMore} />}
       </div>
     );
   }
