@@ -64,11 +64,7 @@ class App extends Component {
           <Modal originUrl={modalContent} closeModal={this.closeModal} />
         )}
         {!!data.length && (
-          <ImageGallery
-            data={data}
-            openModal={this.openModal}
-            // closeModal={this.closeModal}
-          />
+          <ImageGallery data={data} openModal={this.openModal} />
         )}
 
         {isLoading && <Loader />}
