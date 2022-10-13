@@ -1,11 +1,10 @@
 import { Component } from 'react';
+import { fetchApi } from 'api/fetchApi';
 import Searchbar from './Searchbar/Searchbar';
-import { fetchApi } from 'utils/fetchApi';
 import ImageGallery from './ImageGallery/ImageGallery';
-import s from '../components/App.module.css';
 import Button from './Button/Button';
 import Loader from './Loader/Loader';
-import Modal from './Modal/Modal';
+import s from '../components/App.module.css';
 
 class App extends Component {
   state = {
@@ -13,8 +12,6 @@ class App extends Component {
     page: 1,
     query: '',
     isLoading: false,
-    modalOpen: false,
-    modalContent: '',
   };
 
   componentDidUpdate(_, prevState) {
@@ -47,26 +44,12 @@ class App extends Component {
     this.setState({ page: this.state.page + 1 });
   };
 
-  openModal = originUrl => {
-    this.setState({ modalOpen: true, modalContent: originUrl });
-  };
-
-  closeModal = () => {
-    this.setState({ modalOpen: false, modalContent: '' });
-  };
-
   render() {
-    const { modalOpen, modalContent, data, isLoading } = this.state;
+    const { data, isLoading } = this.state;
     return (
       <div className={s.app}>
         <Searchbar onSubmit={this.searchImg} />
-        {modalOpen && (
-          <Modal originUrl={modalContent} closeModal={this.closeModal} />
-        )}
-        {!!data.length && (
-          <ImageGallery data={data} openModal={this.openModal} />
-        )}
-
+        {!!data.length && <ImageGallery data={data} />}
         {isLoading && <Loader />}
         {!!data.length && <Button onClick={this.loadMore} />}
       </div>

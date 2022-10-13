@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import s from '../Searchbar/Search.module.css';
 import { FcSearch } from 'react-icons/fc';
 import PropTypes from 'prop-types';
+import s from '../Searchbar/Search.module.css';
 
 class Searchbar extends Component {
   state = {
